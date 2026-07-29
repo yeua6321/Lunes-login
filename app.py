@@ -167,7 +167,7 @@ def _xdotool_click(x: int, y: int):
     _activate_window()
     try:
         subprocess.run(["xdotool", "mousemove", "--sync", str(x), str(y)], timeout=3, stderr=subprocess.DEVNULL)
-        time.sleep(0.15)
+        time.sleep(0.16)
         subprocess.run(["xdotool", "click", "1"], timeout=2, stderr=subprocess.DEVNULL)
     except Exception:
         os.system(f"xdotool mousemove {x} {y} click 1 2>/dev/null")
@@ -203,7 +203,7 @@ def handle_turnstile(sb) -> bool:
     for _ in range(3):
         try: sb.execute_script(_EXPAND_JS)
         except Exception: pass
-        time.sleep(0.5)
+        time.sleep(0.6)
 
     for attempt in range(6):
         if sb.execute_script(_SOLVED_JS):
@@ -211,7 +211,7 @@ def handle_turnstile(sb) -> bool:
             return True
         try: sb.execute_script(_EXPAND_JS)
         except Exception: pass
-        time.sleep(0.3)
+        time.sleep(0.5)
         
         _click_turnstile(sb)
         
@@ -227,7 +227,7 @@ def handle_turnstile(sb) -> bool:
 
 def login(sb) -> bool:
     print(f"🌐 打开登录页面: {LOGIN_URL}")
-    sb.uc_open_with_reconnect(LOGIN_URL, reconnect_time=5)
+    sb.uc_open_with_reconnect(LOGIN_URL, reconnect_time=6)
     time.sleep(6)
 
     print("⏳ 等待 Cloudflare 验证通过...")
@@ -243,10 +243,10 @@ def login(sb) -> bool:
         print("⚠️ Cloudflare 验证可能未通过，继续尝试...")
 
     try:
-        sb.wait_for_element('input[name="email"]', timeout=15)
+        sb.wait_for_element('input[name="email"]', timeout=16)
     except Exception:
         try:
-            sb.wait_for_element('input[name="Email"]', timeout=5)
+            sb.wait_for_element('input[name="Email"]', timeout=6)
         except Exception:
             print("❌ 页面未加载出登录表单")
             cur_url = sb.get_current_url()
@@ -307,7 +307,7 @@ def login(sb) -> bool:
 def visit_server(sb) -> (bool, dict):
     print("🔍 正在查找服务器卡片...")
     try:
-        sb.wait_for_element('a.server-card', timeout=17)
+        sb.wait_for_element('a.server-card', timeout=20)
     except Exception:
         print("❌ 未找到服务器卡片（可能没有服务器）")
         return False, {"error": "未找到服务器卡片，可能账户无服务器"}
@@ -328,14 +328,14 @@ def visit_server(sb) -> (bool, dict):
 
     print(f"🖱️ 点击服务器卡片 (ID: {server_id})")
     card.click()
-    time.sleep(3)
+    time.sleep(5)
 
     expected_url_prefix = f"https://betadash.lunes.host/servers/{server_id}"
     for _ in range(10):
         cur_url = sb.get_current_url().split('?')[0]
         if cur_url == expected_url_prefix:
             break
-        time.sleep(1)
+        time.sleep(2)
     else:
         return False, {"server_id": server_id, "error": f"跳转后 URL 不匹配，当前: {sb.get_current_url()}"}
 
