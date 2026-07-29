@@ -307,7 +307,7 @@ def login(sb) -> bool:
 def visit_server(sb) -> (bool, dict):
     print("🔍 正在查找服务器卡片...")
     try:
-        sb.wait_for_element('a.server-card', timeout=15)
+        sb.wait_for_element('a.server-card', timeout=17)
     except Exception:
         print("❌ 未找到服务器卡片（可能没有服务器）")
         return False, {"error": "未找到服务器卡片，可能账户无服务器"}
