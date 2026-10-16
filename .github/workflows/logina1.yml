@@ -1,4 +1,4 @@
-name: Auto-login-Lunes los
+name: Auto-login-Lunes
 on:
   workflow_dispatch:
   schedule:
@@ -43,12 +43,15 @@ jobs:
           xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
             python3 app.py
 
+
       - name: 🧹 清理旧的工作流运行记录
         env:
           GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
           workflow_file="${{ github.workflow_ref }}"
           workflow_file="${workflow_file#*/.github/workflows/}"
+          workflow_file="${workflow_file%%@*}"
       
           echo "当前 Workflow: $workflow_file"
       
