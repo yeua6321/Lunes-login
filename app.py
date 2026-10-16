@@ -205,7 +205,7 @@ def handle_turnstile(sb) -> bool:
         except Exception: pass
         time.sleep(0.6)
 
-    for attempt in range(6):
+    for attempt in range(8):
         if sb.execute_script(_SOLVED_JS):
             print(f"✅ Turnstile 通过（第 {attempt + 1} 次尝试）")
             return True
@@ -222,7 +222,7 @@ def handle_turnstile(sb) -> bool:
                 return True
         print(f"  ⚠️ 第 {attempt + 1} 次未通过，重试...")
 
-    print("  ❌ Turnstile 6 次均失败")
+    print("  ❌ Turnstile 8 次均失败")
     return False
 
 def login(sb) -> bool:
